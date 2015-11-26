@@ -1,18 +1,27 @@
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_primitives.h>
+#include <allegro5\allegro_font.h>
+#include <allegro5\allegro_ttf.h>
 
-//GLOBALS==============================
+struct Orzel
+{
+	int x;
+	int y;
+};
+
 const int WIDTH = 800;
 const int HEIGHT = 400;
 
-void Initshuttle(Galaktyka &shuttle);
-void Drawshuttle(Galactica &shuttle);
+void InitOrzel(Orzel &statek);
+void DrawOrzel(Orzel &statek);
+
 
 int main(void)
 {
 	bool done = false;
+	int count = 0;
 
-	Galactica shuttle;
+	Orzel statek;
 
 	ALLEGRO_DISPLAY *display = NULL;
 
@@ -23,12 +32,20 @@ int main(void)
 	if(!display)										//test display object
 		return -1;
 
+	al_init_font_addon();
+	al_init_ttf_addon();
+
+	ALLEGRO_FONT *font24 = al_load_font("segoeui.ttf", 24, 0);
+
 	al_init_primitives_addon();
-	Initshuttle(shuttle);
+	InitOrzel(statek);
 
 	while(!done)
 	{
-		Drawshuttle(shuttle);
+		DrawOrzel(statek);
+
+		count++;
+		al_draw_textf(font24, al_map_rgb(255, 255, 0), 25, 50, 0, "Timer: %i", count);
 		
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0,0,0));
@@ -38,23 +55,21 @@ int main(void)
 	return 0;
 }
 
-void Initshuttle(Galactica &shuttle)
+void InitOrzel(Orzel &statek)
 {
-	shuttle.x = 20;
-	shuttle.y = HEIGHT / 2;
-	shuttle.ID = PLAYER;
-	shuttle.lives = 3;
-	shuttle.speed = 7;
-	shuttle.boundx = 6;
-	shuttle.boundy = 7;
-	shuttle.score = 0;
+	statek.x = 15;
+	statek.y = HEIGHT / 2;
+	
 }
 
-void Drawshuttle(Galactica &shuttle)
+void DrawOrzel(Orzel &statek)
 {
-	al_draw_filled_rectangle(shuttle.x, shuttle.y - 9, shuttle.x + 10, shuttle.y - 7, al_map_rgb(255, 0, 0));
-	al_draw_filled_rectangle(shuttle.x, shuttle.y + 9, shuttle.x + 10, shuttle.y + 7, al_map_rgb(255, 0, 0));
-
-	al_draw_filled_triangle(shuttle.x - 12, shuttle.y - 17, shuttle.x + 12, shuttle.y, shuttle.x - 12, shuttle.y + 17, al_map_rgb(0, 255, 0));
-	al_draw_filled_rectangle(shuttle.x - 12, shuttle.y - 2, shuttle.x + 15, shuttle.y + 2, al_map_rgb(0, 0, 255));
+	//left dzida
+	al_draw_filled_rectangle(statek.x, statek.y - 9, statek.x + 10, statek.y - 7, al_map_rgb(255, 0, 0));
+	//right dzida
+	al_draw_filled_rectangle(statek.x, statek.y + 9, statek.x + 10, statek.y + 7, al_map_rgb(255, 0, 0));
+	//statek
+	al_draw_filled_triangle(statek.x - 12, statek.y - 17, statek.x + 12, statek.y, statek.x - 12, statek.y + 17, al_map_rgb(0, 255, 0));
+	//fotel kapitana
+	al_draw_filled_rectangle(statek.x - 12, statek.y - 2, statek.x + 15, statek.y + 2, al_map_rgb(0, 0, 255));
 }
